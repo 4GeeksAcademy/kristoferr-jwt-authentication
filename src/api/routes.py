@@ -20,3 +20,24 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+
+@api.route('/token', methods=['POST'])
+def user_signup():
+    body = request.json
+    if not body:
+        return jsonify({"msg": "sorry your request is empty"}), 400
+    email = body.get("email")
+    if not email:
+        return jsonify({"msg": "sorry no email"}), 400
+    password = body.get("password")
+    if not password:
+        return jsonify({"msg": "sorry no password"}), 400
+    
+    newUser = User(
+        email = email,
+        password = password
+    )
+    db.session.add(newUser)
+    db.session.commit()
+    
