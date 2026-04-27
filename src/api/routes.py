@@ -34,10 +34,12 @@ def user_signup():
     if not password:
         return jsonify({"msg": "sorry no password"}), 400
     
+    # I dont understand the key value pairs how to Call User Class and add user???
     newUser = User(
         email = email,
         password = password
     )
     db.session.add(newUser)
     db.session.commit()
+    return jsonify({"msg": "new user added"}), 201
     
