@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const Signup = () => {
+export const Login = () => {
 
     const [formData, setFormData] = useState({
         "email": "", 
@@ -13,11 +14,13 @@ export const Signup = () => {
     //     console.log(formData); // ✅ works
     // };
 
-    function handleSubmit(){
-        //get form data and send to backend with a fetch request
-        const url = "https://studious-guide-wrp4qrrx56j7cvgpr-3001.app.github.dev/api/users";
+    const navigate = useNavigate();
 
-        fetch(url,{
+    async function handleSubmit(){
+        //get form data and send to backend with a fetch request
+        const url = "https://studious-guide-wrp4qrrx56j7cvgpr-3001.app.github.dev/api/login";
+
+        const response = await fetch(url,{
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"
@@ -27,6 +30,15 @@ export const Signup = () => {
                 password: formData.password
             })
         });
+
+        const token = await response.json();
+        console.log("testing token", token);
+
+        //Save token to local storage
+        sessionStorage.setItem("access_token", token.access_token)
+
+        //Redirect user to frontend
+        navigate("/protected");
     }
 
     return (
@@ -69,7 +81,7 @@ export const Signup = () => {
                             onClick={(event)=>{
                                 handleSubmit();
                             }} 
-                            className="btn btn-primary">Signup</button>
+                            className="btn btn-primary">Login</button>
                         </form>
                     </div>
                 </div>
